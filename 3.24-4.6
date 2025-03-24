@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>工资计算小程序</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .section { display: none; margin-bottom: 20px; }
+    .section.active { display: block; }
+    table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+    table, th, td { border: 1px solid #aaa; padding: 6px; text-align: center; }
+    label { display: block; margin: 8px 0; }
+    button { margin: 10px 5px; padding: 6px 12px; }
+    input[type="number"] { width: 80px; }
+    input[type="text"] { width: 200px; }
+  </style>
+</head>
+<body>
+  <h1>工资计算小程序</h1>
+
+  <!-- Section 1: 少年宫 -->
+  <div id="section1" class="section active">
+    <h2>少年宫工资</h2>
+    <label>
+      老师姓名:
+      <input type="text" id="teacher_name" placeholder="请输入您的姓名">
+    </label>
+    <label>
+      教师等级:
+      <select id="sj_teacher_level" onchange="toggleShaoTable()">
+        <option value="3">三级</option>
+        <option value="2">二级</option>
+      </select>
+    </label>
+    
+    <!-- For 三级教师 -->
+    <div id="table_3" style="display: block;">
+      <h3>【三级教师】 少年宫课程（固定1.5h/课，50刀/课）</h3>
+      <table>
+        <tr>
+          <th>课程</th>
+          <th>上课次数</th>
+        </tr>
+        <tr>
+          <td>基础班1（周六 10-11:30am）</td>
+          <td><input type="number" class="session_count_3" value="0" min="0"></td>
+        </tr>
+        <tr>
+          <td>基础班2（周六 1-2:30pm）</td>
+          <td><input type="number" class="session_count_3" value="0" min="0"></td>
+        </tr>
+        <tr>
+          <td>基础班3（周六 2:45-4:14pm）</td>
+          <td><input type="number" class="session_count_3" value="0" min="0"></td>
+        </tr>
+        <tr>
+          <td>基础班4（周六 4:30-6pm）</td>
+          <td><input type="number" class="session_count_3" value="0" min="0"></td>
+        </tr>
+        <tr>
+          <td>基础班（周三 4-5:30pm）</td>
+          <td><input type="number" class="session_count_3" value="0" min="0"></td>
+        </tr>
+        <tr>
+          <td>周六 1 对 1 私教</td>
+          <td><input type="number" class="session_count_3" value="0" min="0"></td>
+        </tr>
+        <tr>
+          <td>
+            自定义课程（填写名称、时长（小时）、每小时工资）
+            <br>
+            <input type="text" class="custom_name_3" placeholder="课程名称">
+            <input type="number" class="custom_duration_3" placeholder="时长" value="0" min="0" step="0.1">
+            <input type="number" class="custom_rate_3" placeholder="每小时工资" value="0" min="0" step="0.1">
+          </td>
+          <td><input type="number" class="custom_sessions_3" placeholder="上课次数" value="0" min="0"></td>
+        </tr>
+      </table>
+    </div>
+    
+    <!-- For 二级教师 -->
+    <div id="table_2" style="display: none;">
+      <h3>【二级教师】 少年宫课程（按时长计：时薪40刀 + 每课提成：学生数×1刀）</h3>
+      <table>
+        <tr>
+          <th>课程</th>
+          <th>课程时长（小时）</th>
+          <th>学生人数</th>
+        </tr>
+        <tr>
+          <td>基础班1（周六 10-11:30am）</td>
+          <td><input type="number" class="session_duration_2" value="0" min="0" step="0.1"></td>
+          <td><input type="number" class="session_students_2" value="0" min="0"></td>
+        </tr>
+        <tr>
+          <td>基础班2（周六 1-2:30pm）</td>
+          <td><input type="number" class="session_duration_2" value="0" min="0" step="0.1"></td>
+          <td><input type="number" class="session_students_2" value="0" min="0"></td>
+        </tr>
+        <tr>
+          <td>基础班3（周六 2:45-4:14pm）</td>
+          <td><input type="number" class="session_duration_2" value="0" min="0" step="0.1"></td>
+          <td><input type="number" class="session_students_2" value="0" min="0"></td>
+        </tr>
+        <tr>
+          <td>基础班4（周六 4:30-6pm）</td>
+          <td><input type="number" class="session_duration_2" value="0" min="0" step="0.1"></td>
+          <td><input type="number" class="session_students_2" value="0" min="0"></td>
+        </tr>
+        <tr>
+          <td>基础班（周三 4-5:30pm）</td>
+          <td><input type="number" class="session_duration_2" value="0" min="0" step="0.1"></td>
+          <td><input type="number" class="session_students_2" value="0" min="0"></td>
+        </tr>
+        <tr>
+          <td>周六 1 对 1 私教</td>
+          <td><input type="number" class="session_duration_2" value="0" min="0" step="0.1"></td>
+          <td><input type="number" class="session_students_2" value="0" min="0"></td>
+        </tr>
+        <tr>
+          <td>
+            自定义课程（填写名称、时长（小时）、每小时工资、上课次数）
+            <br>
+            <input type="text" class="custom_name_2" placeholder="课程名称">
+            <input type="number" class="custom_duration_2" placeholder="时长" value="0" min="0" step="0.1">
+            <input type="number" class="custom_rate_2" placeholder="每小时工资" value="0" min="0" step="0.1">
+            <input type="number" class="custom_sessions_2" placeholder="上课次数" value="0" min="0">
+          </td>
+          <td colspan="2"></td>
+        </tr>
+      </table>
+    </div>
+    
+    <button onclick="nextSection(1)">下一步：入校（主教）</button>
+  </div>
+
+  <!-- Section 2: 入校主教 -->
+  <div id="section2" class="section">
+    <h2>入校工资（主教）</h2>
+    <label>
+      是否带助教:
+      <select id="rujiao_assistant">
+        <option value="yes">是</option>
+        <option value="no">否</option>
+      </select>
+    </label>
+    <h3>请选择入校学校并填写对应数据</h3>
+    <table id="table_rujiao_main">
+      <tr>
+        <th>选择</th>
+        <th>学校及时间</th>
+        <th>授课小时数</th>
+        <th>学生人数</th>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="rujiao_main_checkbox"></td>
+        <td>St Ives Public School （周一 3:15-4:15pm）</td>
+        <td><input type="number" class="rujiao_main_hours" value="0" min="0" step="0.1"></td>
+        <td><input type="number" class="rujiao_main_students" value="0" min="0"></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="rujiao_main_checkbox"></td>
+        <td>Forstville Public School （周一 3:15-4:15pm）</td>
+        <td><input type="number" class="rujiao_main_hours" value="0" min="0" step="0.1"></td>
+        <td><input type="number" class="rujiao_main_students" value="0" min="0"></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="rujiao_main_checkbox"></td>
+        <td>Five Dock Public School （周二 3:05-4:05pm）</td>
+        <td><input type="number" class="rujiao_main_hours" value="0" min="0" step="0.1"></td>
+        <td><input type="number" class="rujiao_main_students" value="0" min="0"></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="rujiao_main_checkbox"></td>
+        <td>Epping Heights Public School （周二 3:15-4:15pm）</td>
+        <td><input type="number" class="rujiao_main_hours" value="0" min="0" step="0.1"></td>
+        <td><input type="number" class="rujiao_main_students" value="0" min="0"></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="rujiao_main_checkbox"></td>
+        <td>Mortlake Public School （周四 3:05-4:05pm）</td>
+        <td><input type="number" class="rujiao_main_hours" value="0" min="0" step="0.1"></td>
+        <td><input type="number" class="rujiao_main_students" value="0" min="0"></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="rujiao_main_checkbox"></td>
+        <td>Sacred Heart Catholic Primary School Pymble （周四 3:05-4:05pm）</td>
+        <td><input type="number" class="rujiao_main_hours" value="0" min="0" step="0.1"></td>
+        <td><input type="number" class="rujiao_main_students" value="0" min="0"></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="rujiao_main_checkbox"></td>
+        <td>Ryde West Public School （周五 3:30-4:30pm）</td>
+        <td><input type="number" class="rujiao_main_hours" value="0" min="0" step="0.1"></td>
+        <td><input type="number" class="rujiao_main_students" value="0" min="0"></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="rujiao_main_checkbox"></td>
+        <td>Brigidine College St Ives （周一 3:30-4pm）</td>
+        <td><input type="number" class="rujiao_main_hours" value="0" min="0" step="0.1"></td>
+        <td><input type="number" class="rujiao_main_students" value="0" min="0"></td>
+      </tr>
+    </table>
+    <button onclick="prevSection(2)">上一步</button>
+    <button onclick="nextSection(2)">下一步：入校（助教）</button>
+  </div>
+
+  <!-- Section 3: 入校助教 -->
+  <div id="section3" class="section">
+    <h2>入校工资（助教）</h2>
+    <h3>请选择入校学校并填写授课小时数</h3>
+    <table id="table_rujiao_assistant">
+      <tr>
+        <th>选择</th>
+        <th>学校及时间</th>
+        <th>授课小时数</th>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="rujiao_assistant_checkbox"></td>
+        <td>St Ives Public School （周一 3:15-4:15pm）</td>
+        <td><input type="number" class="rujiao_assistant_hours" value="0" min="0" step="0.1"></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="rujiao_assistant_checkbox"></td>
+        <td>Forstville Public School （周一 3:15-4:15pm）</td>
+        <td><input type="number" class="rujiao_assistant_hours" value="0" min="0" step="0.1"></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="rujiao_assistant_checkbox"></td>
+        <td>Five Dock Public School （周二 3:05-4:05pm）</td>
+        <td><input type="number" class="rujiao_assistant_hours" value="0" min="0" step="0.1"></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="rujiao_assistant_checkbox"></td>
+        <td>Epping Heights Public School （周二 3:15-4:15pm）</td>
+        <td><input type="number" class="rujiao_assistant_hours" value="0" min="0" step="0.1"></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="rujiao_assistant_checkbox"></td>
+        <td>Mortlake Public School （周四 3:05-4:05pm）</td>
+        <td><input type="number" class="rujiao_assistant_hours" value="0" min="0" step="0.1"></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="rujiao_assistant_checkbox"></td>
+        <td>Sacred Heart Catholic Primary School Pymble （周四 3:05-4:05pm）</td>
+        <td><input type="number" class="rujiao_assistant_hours" value="0" min="0" step="0.1"></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="rujiao_assistant_checkbox"></td>
+        <td>Ryde West Public School （周五 3:30-4:30pm）</td>
+        <td><input type="number" class="rujiao_assistant_hours" value="0" min="0" step="0.1"></td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" class="rujiao_assistant_checkbox"></td>
+        <td>Brigidine College St Ives （周一 3:30-4pm）</td>
+        <td><input type="number" class="rujiao_assistant_hours" value="0" min="0" step="0.1"></td>
+      </tr>
+    </table>
+    <button onclick="prevSection(3)">上一步</button>
+    <button onclick="nextSection(3)">下一步：特殊活动</button>
+  </div>
+
+  <!-- Section 4: 特殊活动 -->
+  <div id="section_special" class="section">
+    <h2>特殊活动</h2>
+    <table>
+      <tr>
+        <th>活动名称</th>
+        <th>活动时长（小时）</th>
+        <th>每小时工资</th>
+      </tr>
+      <tr>
+        <td><input type="text" class="special_name" placeholder="活动名称"></td>
+        <td><input type="number" class="special_duration" value="0" min="0" step="0.1"></td>
+        <td><input type="number" class="special_rate" value="0" min="0" step="0.1"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="special_name" placeholder="活动名称"></td>
+        <td><input type="number" class="special_duration" value="0" min="0" step="0.1"></td>
+        <td><input type="number" class="special_rate" value="0" min="0" step="0.1"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="special_name" placeholder="活动名称"></td>
+        <td><input type="number" class="special_duration" value="0" min="0" step="0.1"></td>
+        <td><input type="number" class="special_rate" value="0" min="0" step="0.1"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="special_name" placeholder="活动名称"></td>
+        <td><input type="number" class="special_duration" value="0" min="0" step="0.1"></td>
+        <td><input type="number" class="special_rate" value="0" min="0" step="0.1"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="special_name" placeholder="活动名称"></td>
+        <td><input type="number" class="special_duration" value="0" min="0" step="0.1"></td>
+        <td><input type="number" class="special_rate" value="0" min="0" step="0.1"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="special_name" placeholder="活动名称"></td>
+        <td><input type="number" class="special_duration" value="0" min="0" step="0.1"></td>
+        <td><input type="number" class="special_rate" value="0" min="0" step="0.1"></td>
+      </tr>
+    </table>
+    <button onclick="prevSection(4)">上一步</button>
+    <button onclick="nextSection(4)">下一步：汇总</button>
+  </div>
+
+  <!-- Section 5: 汇总 -->
+  <div id="summarySection" class="section">
+    <h2>工资汇总</h2>
+    <div id="summaryContent"></div>
+    <button onclick="prevSection(5)">上一步</button>
+    <button onclick="submitData()">确认提交</button>
+  </div>
+
+  <script>
+    // 页面切换函数
+    function nextSection(current) {
+      if(current === 1){
+        document.getElementById("section1").classList.remove("active");
+        document.getElementById("section2").classList.add("active");
+      } else if(current === 2){
+        document.getElementById("section2").classList.remove("active");
+        document.getElementById("section3").classList.add("active");
+      } else if(current === 3){
+        document.getElementById("section3").classList.remove("active");
+        document.getElementById("section_special").classList.add("active");
+      } else if(current === 4){
+        document.getElementById("section_special").classList.remove("active");
+        calculateAndShowSummary(); // 汇总时计算
+        document.getElementById("summarySection").classList.add("active");
+      }
+    }
+    function prevSection(current) {
+      if(current === 2){
+        document.getElementById("section2").classList.remove("active");
+        document.getElementById("section1").classList.add("active");
+      } else if(current === 3){
+        document.getElementById("section3").classList.remove("active");
+        document.getElementById("section2").classList.add("active");
+      } else if(current === 4){
+        document.getElementById("section_special").classList.remove("active");
+        document.getElementById("section3").classList.add("active");
+      } else if(current === 5){
+        document.getElementById("summarySection").classList.remove("active");
+        document.getElementById("section_special").classList.add("active");
+      }
+    }
+
+    // 切换少年宫表格（三级 vs 二级）
+    function toggleShaoTable(){
+      var level = document.getElementById("sj_teacher_level").value;
+      if(level === "3"){
+        document.getElementById("table_3").style.display = "block";
+        document.getElementById("table_2").style.display = "none";
+      } else {
+        document.getElementById("table_3").style.display = "none";
+        document.getElementById("table_2").style.display = "block";
+      }
+    }
+    toggleShaoTable();
+    
+    // 计算少年宫工资
+    function calculateShaoWage(){
+      var level = document.getElementById("sj_teacher_level").value;
+      var wage = 0;
+      if(level === "3"){
+        // 固定行：按每节课50刀计算
+        var sessions = document.getElementsByClassName("session_count_3");
+        for(var i = 0; i < sessions.length; i++){
+          wage += Number(sessions[i].value) * 50;
+        }
+        // 自定义行
+        var customSessions = Number(document.getElementsByClassName("custom_sessions_3")[0].value);
+        var customDuration = Number(document.getElementsByClassName("custom_duration_3")[0].value);
+        var customRate = Number(document.getElementsByClassName("custom_rate_3")[0].value);
+        wage += customSessions * customDuration * customRate;
+      } else {
+        // 二级教师：每行工资 = 时长×40 + 学生数×1
+        var durations = document.getElementsByClassName("session_duration_2");
+        var students = document.getElementsByClassName("session_students_2");
+        for(var i = 0; i < durations.length; i++){
+          wage += (Number(durations[i].value) * 40) + Number(students[i].value);
+        }
+        // 自定义行
+        var customSessions = Number(document.getElementsByClassName("custom_sessions_2")[0].value);
+        var customDuration = Number(document.getElementsByClassName("custom_duration_2")[0].value);
+        var customRate = Number(document.getElementsByClassName("custom_rate_2")[0].value);
+        wage += customSessions * customDuration * customRate;
+      }
+      return wage;
+    }
+    
+    // 计算入校主教工资
+    function calculateRujiaoMainWage(){
+      var withAssistant = document.getElementById("rujiao_assistant").value;
+      var checkboxes = document.getElementsByClassName("rujiao_main_checkbox");
+      var hoursInputs = document.getElementsByClassName("rujiao_main_hours");
+      var studentsInputs = document.getElementsByClassName("rujiao_main_students");
+      var wage = 0;
+      for(var i = 0; i < checkboxes.length; i++){
+        if(checkboxes[i].checked){
+          var hrs = Number(hoursInputs[i].value);
+          var stu = Number(studentsInputs[i].value);
+          if(withAssistant === "yes"){
+            wage += hrs * (30 + stu * 4);
+          } else {
+            wage += hrs * (30 + stu * 6);
+          }
+        }
+      }
+      return wage;
+    }
+    
+    // 计算入校助教工资
+    function calculateRujiaoAssistantWage(){
+      var checkboxes = document.getElementsByClassName("rujiao_assistant_checkbox");
+      var hoursInputs = document.getElementsByClassName("rujiao_assistant_hours");
+      var wage = 0;
+      for(var i = 0; i < checkboxes.length; i++){
+        if(checkboxes[i].checked){
+          wage += Number(hoursInputs[i].value) * 50;
+        }
+      }
+      return wage;
+    }
+    
+    // 计算特殊活动工资
+    function calculateSpecialWage(){
+      var wage = 0;
+      var durations = document.getElementsByClassName("special_duration");
+      var rates = document.getElementsByClassName("special_rate");
+      for(var i = 0; i < durations.length; i++){
+        wage += Number(durations[i].value) * Number(rates[i].value);
+      }
+      return wage;
+    }
+    
+    // 汇总并显示结果
+    function calculateAndShowSummary(){
+      var teacherName = document.getElementById("teacher_name").value || "未填写";
+      var wageShao = calculateShaoWage();
+      var wageRujiaoMain = calculateRujiaoMainWage();
+      var wageRujiaoAssistant = calculateRujiaoAssistantWage();
+      var wageSpecial = calculateSpecialWage();
+      var total = wageShao + wageRujiaoMain + wageRujiaoAssistant + wageSpecial;
+      
+      var summaryHtml = "<table><tr><th>老师姓名</th><th>少年宫工资</th><th>入校主教工资</th><th>入校助教工资</th><th>特殊活动工资</th><th>总工资</th></tr>";
+      summaryHtml += "<tr><td>" + teacherName + "</td>";
+      summaryHtml += "<td>$" + wageShao.toFixed(2) + "</td>";
+      summaryHtml += "<td>$" + wageRujiaoMain.toFixed(2) + "</td>";
+      summaryHtml += "<td>$" + wageRujiaoAssistant.toFixed(2) + "</td>";
+      summaryHtml += "<td>$" + wageSpecial.toFixed(2) + "</td>";
+      summaryHtml += "<td>$" + total.toFixed(2) + "</td></tr></table>";
+      document.getElementById("summaryContent").innerHTML = summaryHtml;
+    }
+    
+    // 提交数据（通过 AJAX 提交到后端，如写入共享表格）
+    function submitData(){
+      var data = {
+         teacher_name: document.getElementById("teacher_name").value,
+         shao_wage: calculateShaoWage(),
+         rujiao_main_wage: calculateRujiaoMainWage(),
+         rujiao_assistant_wage: calculateRujiaoAssistantWage(),
+         special_wage: calculateSpecialWage(),
+         total_wage: calculateShaoWage() + calculateRujiaoMainWage() + calculateRujiaoAssistantWage() + calculateSpecialWage()
+      };
+      // 请将 YOUR_ENDPOINT_URL 替换成实际后端接口地址
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "YOUR_ENDPOINT_URL", true);
+      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4 && xhr.status === 200){
+          alert("数据已成功提交！");
+        }
+      };
+      xhr.send(JSON.stringify(data));
+    }
+  </script>
+</body>
+</html>
